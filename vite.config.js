@@ -7,8 +7,4 @@ export default defineConfig({
   base: "/PiTodo/",
 
   plugins: [react(), tailwindcss()],
-  server: {
-    host: true, // exposes to local network
-    port: 5175, // you can change the port if needed
-  },
 });
