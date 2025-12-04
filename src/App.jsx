@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 function App() {
   const [inputValue, setinputValue] = useState("");
   const [todos, setTodos] = useState([]);
-  const [folder, setFolder] = useState("all");
+  const [folder, setFolder] = useState("today");
 
   useEffect(() => {
     const storedTodos = localStorage.getItem("storedTodos");
@@ -85,13 +85,12 @@ function App() {
             return setFolder(e.target.value);
           }}
         >
-          <option value="all">ALL</option>
           <option value="today">TODAY</option>
+          <option value="all">ALL</option>
           <option value="completed">COMPLETED</option>
         </select>
       </div>
 
-      {/* Todos always stacked below */}
       <div className="mt-6 flex flex-col gap-2">
         {getFilteredTodos().map((todo) => (
           <Todo
