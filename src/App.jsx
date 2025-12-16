@@ -7,6 +7,8 @@ import { useState, useEffect } from "react";
 import { useRef } from "react";
 
 function App() {
+  let selectedDate;
+
   const dateInputRef = useRef(null);
   const handleContainerClick = () => {
     if (dateInputRef.current) {
@@ -16,6 +18,13 @@ function App() {
         dateInputRef.current.focus();
       }
     }
+  };
+  const handleDateChange = (event) => {
+    selectedDate = event.target.value;
+    if (selectedDate) {
+      alert(`You are scheduling your task for ${selectedDate}`);
+    }
+    selectedDate = "";
   };
 
   const [inputValue, setinputValue] = useState("");
@@ -40,6 +49,7 @@ function App() {
       description: inputValue,
       completed: false,
       hidden: false,
+      // isScheduled: selectedDate ? true : false,
       dueDate: new Date().toISOString().split("T")[0],
     };
     setTodos([...todos, newTodo]);
@@ -89,6 +99,7 @@ function App() {
           {/* We hide it visually but keep it in the DOM */}
           <input
             ref={dateInputRef}
+            onChange={handleDateChange}
             type="date"
             className="absolute w-0 h-0 opacity-0" // Hide it completely
           />
