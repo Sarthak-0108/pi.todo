@@ -7,7 +7,8 @@ import { useState, useEffect } from "react";
 import { useRef } from "react";
 
 function App() {
-  let selectedDate;
+  const today = new Date().toISOString().split("T")[0];
+  const [selectedDate, setSelectedDate] = useState(today);
 
   const dateInputRef = useRef(null);
   const handleContainerClick = () => {
@@ -20,11 +21,11 @@ function App() {
     }
   };
   const handleDateChange = (event) => {
-    selectedDate = event.target.value;
+    let newDate = event.target.value;
+    setSelectedDate(newDate);
     if (selectedDate) {
-      alert(`You are scheduling your task for ${selectedDate}`);
+      alert(`You are scheduling your task for ${newDate}`);
     }
-    selectedDate = "";
   };
 
   const [inputValue, setinputValue] = useState("");
@@ -43,17 +44,21 @@ function App() {
   }, [todos]);
 
   const handleAddTodo = () => {
+    console.log(selectedDate);
     if (inputValue.trim() === "") return;
+    const finalDate = selectedDate;
+    console.log(`finalDAte : ${finalDate}`);
+
     const newTodo = {
       id: Date.now(),
       description: inputValue,
       completed: false,
       hidden: false,
-      // isScheduled: selectedDate ? true : false,
-      dueDate: new Date().toISOString().split("T")[0],
+      dueDate: finalDate,
     };
     setTodos([...todos, newTodo]);
     setinputValue("");
+    setSelectedDate(today);
   };
 
   const getFilteredTodos = () => {
@@ -64,6 +69,8 @@ function App() {
         return todos.filter((todo) => todo.dueDate === today && !todo.hidden);
       case "completed":
         return todos.filter((todo) => todo.completed && !todo.hidden);
+      case "scheduled":
+        return todos.filter((todo) => todo.dueDate !== today && !todo.hidden);
       case "all":
       default:
         return todos.filter((todo) => !todo.hidden);
@@ -90,18 +97,16 @@ function App() {
         >
           <FontAwesomeIcon
             icon={faCalendar}
-            className="text-gray-500 mr-2 pointer-events-none" // Ensure icon doesn't block click
+            className="text-gray-500 mr-2 pointer-events-none"
           />
 
           <span className="pointer-events-none">Schedule</span>
 
-          {/* 4. The Hidden Input */}
-          {/* We hide it visually but keep it in the DOM */}
           <input
             ref={dateInputRef}
             onChange={handleDateChange}
             type="date"
-            className="absolute w-0 h-0 opacity-0" // Hide it completely
+            className="absolute w-0 h-0 opacity-0"
           />
         </button>
         <div className="flex items-center border border-gray-900 rounded px-3 py-2 flex-grow">
@@ -131,6 +136,7 @@ function App() {
           <option value="today">TODAY</option>
           <option value="all">ALL</option>
           <option value="completed">COMPLETED</option>
+          <option value="scheduled">SCHEDULED</option>
         </select>
       </div>
 
